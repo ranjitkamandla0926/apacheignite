@@ -68,6 +68,7 @@
                     -->
                     <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.kubernetes.TcpDiscoveryKubernetesIpFinder">
                         <property name="namespace" value="ignite-dev"/>
+                        <property name="servicename" value="dev-ignite-svc"/>
                     </bean>
                 </property>
             </bean>
