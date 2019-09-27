@@ -1,0 +1,64 @@
+imageCredentials:
+  registry: acrforfdsc.azurecr.io
+  username: ranjit
+  password:
+
+airflow:
+  image:
+    repository: acrforfdsc.azurecr.io/fdsc-airflow
+    tag: 1.10.3
+    pullPolicy: Always
+    pullSecret: acr-auth
+
+  executor: Kubernetes
+  service:
+    type: ClusterIP
+  fernetKey:
+  sqlalchemy_connection:
+
+  config:
+    AIRFLOW__CORE__EXECUTOR: KubernetesExecutor
+
+    AIRFLOW_HOME: /usr/local/airflow
+    AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY: acrforfdsc.azurecr.io/airflow
+    AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG: 1.10.2
+    AIRFLOW__KUBERNETES__WORKER_CONTAINER_IMAGE_PULL_POLICY: IfNotPresent
+    AIRFLOW__KUBERNETES__IMAGE_PULL_SECRETS: acr-auth
+
+    AIRFLOW__KUBERNETES__WORKER_SERVICE_ACCOUNT_NAME: airflow
+    AIRFLOW__KUBERNETES__NAMESPACE: airflow
+
+    AIRFLOW__KUBERNETES__DAGS_VOLUME_CLAIM: airflow-dags
+    AIRFLOW__KUBERNETES__LOGS_VOLUME_CLAIM: airflow-logs
+
+    AIRFLOW__KUBERNETES__AIRFLOW_CONFIGMAP: airflow-workers-env
+
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN:
+    AIRFLOW__CORE__LOAD_EXAMPLES: False
+
+persistence:
+  fileStore:
+    storageAccountName: fdscqasa
+    storageAccountKey: JefiYOcS+ogOFjBZ9v9adm8ZozZEdP5uokXHtgSkuiLT9INESgiYJWoBL7vCsERiutywYg/0mwDjJ0wT1Cr4NQ==
+
+  logs:
+    secretName: azure-file-airflow-logs
+    shareName: airflow-logs
+
+  dags:
+    secretName: azure-file-airflow-dags
+    shareName: airflow-dags
+
+  temp:
+    secretName: azure-file-airflow-temp
+    shareName: airflow-temp
+
+logs:
+  path: /usr/local/airflow/logs
+
+dags:
+  path: /usr/local/airflow/dags
+  doNotPickle: false
+
+workers:
+  enabled: false
